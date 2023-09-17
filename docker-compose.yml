@@ -14,17 +14,17 @@ services:
     networks:
       - peerprep-network
 
-  peerprep-server:
-    image: server:peerprep
-    container_name: peerprep-server
+  peerprep-question-api:
+    image: question-api:peerprep
+    container_name: peerprep-question-api
     build:
-      context: ./server
+      context: ./question-api
     ports:
       - '8000:8000'
     logging:
       driver: json-file
     volumes:
-      - ./server:/usr/src/app # Mount the server source code directory as a volume
+      - ./question-api:/usr/src/app # Mount the Server source code directory as a volume
       - /usr/src/app/node_modules # Mount the node_modules ONLY IN CONTAINER
     networks:
       - peerprep-network
@@ -52,7 +52,7 @@ services:
       - peerprep-network
     depends_on:
       - peerprep-client # Wait until Client app container is up
-      - peerprep-server # Wait until Server app container is up
+      - peerprep-question-api # Wait until Server app container is up
 
 networks:
   peerprep-network:

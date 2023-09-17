@@ -18,7 +18,7 @@ const initialState: AuthState = {
 export const fetchCurrentUser = createAsyncThunk(
   '/users/fetchCurrentUser',
   async () => {
-    const response = await axios.get('/api/users/currentUser');
+    const response = await axios.get('/questions/users/currentUser');
     return response.data;
   }
 );

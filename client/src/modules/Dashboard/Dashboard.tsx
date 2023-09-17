@@ -10,7 +10,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     axios
-      .get('/api/users')
+      .get('/questions/users')
       .then((response) => {
         setMessage(response.data);
       })
