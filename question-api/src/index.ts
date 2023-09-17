@@ -8,7 +8,7 @@ const app: Express = express();
 const port = process.env.SERVER_PORT;
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('from Server!');
+  res.send('from Question API!');
 });
 
 app.use('/users', userRoutes);

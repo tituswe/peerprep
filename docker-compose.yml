@@ -14,6 +14,19 @@ services:
     networks:
       - peerprep-network
 
+  peerprep-user-api:
+    image: user-api:peerprep
+    container_name: peerprep-user-api
+    build:
+      context: ./user-api
+    ports:
+      - '5050:5050' # FastAPI running on 5050
+    volumes:
+      - ./user-api:/usr/src/app # Mount the FastAPI source code directory as a volume
+    networks:
+      - peerprep-network
+    #do depends on for sql
+
   peerprep-question-api:
     image: question-api:peerprep
     container_name: peerprep-question-api

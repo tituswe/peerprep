@@ -5,14 +5,24 @@ import { selectCurrentUser } from '../../features/user/authSlice';
 import PageWrapper from '../../layouts/PageWrapper';
 
 const Dashboard = () => {
-  const [message, setMessage] = useState('');
+  const [questionApi, setQuestionApi] = useState('');
+  const [userApi, setUserApi] = useState('');
   const currentUser = useSelector(selectCurrentUser);
 
   useEffect(() => {
     axios
-      .get('/questions/users')
+      .get('/users')
       .then((response) => {
-        setMessage(response.data);
+        setUserApi(response.data);
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
+      });
+
+    axios
+      .get('/questions')
+      .then((response) => {
+        setQuestionApi(response.data);
       })
       .catch((error) => {
         console.error('There was an error!', error);
@@ -21,7 +31,8 @@ const Dashboard = () => {
 
   return (
     <PageWrapper>
-      <a>Hello World {message}</a>
+      <a>Hello World {userApi}</a>
+      <a>Hello World {questionApi}</a>
       <a>{currentUser?.name} is logged in</a>
     </PageWrapper>
   );
