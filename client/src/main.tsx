@@ -3,8 +3,11 @@ import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Preloader from './Preloader';
+import Root from './Root';
 import './index.css';
-import Home from './modules/Home/Home';
+import Dashboard from './modules/Dashboard/Dashboard';
+import Login from './modules/Login/Login';
+import Register from './modules/Register/Register';
 import Module2 from './modules/module2/Module2';
 import Module3 from './modules/module3/Module3';
 import { store } from './store';
@@ -12,7 +15,19 @@ import { store } from './store';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />
+    element: <Root />
+  },
+  {
+    path: '/dashboard',
+    element: <Dashboard />
+  },
+  {
+    path: '/login',
+    element: <Login />
+  },
+  {
+    path: '/register',
+    element: <Register />
   },
   {
     path: '/module2',
