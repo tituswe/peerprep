@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Preloader from './Preloader';
 import './index.css';
-import Module1 from './modules/module1/Module1';
+import Home from './modules/Home/Home';
 import Module2 from './modules/module2/Module2';
 import Module3 from './modules/module3/Module3';
 import { store } from './store';
@@ -12,7 +12,7 @@ import { store } from './store';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Module1 />
+    element: <Home />
   },
   {
     path: '/module2',

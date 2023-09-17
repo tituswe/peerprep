@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-  client:
-    image: client:saturday
-    container_name: client
+  peerprep-client:
+    image: client:peerprep
+    container_name: peerprep-client
     build:
       context: ./client
     ports:
@@ -12,11 +12,11 @@ services:
       - ./client:/usr/src/app # Mount the client source code directory as a volume
       - /usr/src/app/node_modules # Mount the node_modules ONLY IN CONTAINER
     networks:
-      - saturday-network
+      - peerprep-network
 
-  server:
-    image: server:saturday
-    container_name: server
+  peerprep-server:
+    image: server:peerprep
+    container_name: peerprep-server
     build:
       context: ./server
     ports:
@@ -27,35 +27,35 @@ services:
       - ./server:/usr/src/app # Mount the server source code directory as a volume
       - /usr/src/app/node_modules # Mount the node_modules ONLY IN CONTAINER
     networks:
-      - saturday-network
+      - peerprep-network
     depends_on:
-      - mongo
+      - peerprep-mongo
 
-  mongo:
+  peerprep-mongo:
     image: mongo:latest
-    container_name: mongo
+    container_name: peerprep-mongo
     ports:
       - '27017:27017'
     volumes:
       - mongo-data:/data/db
     networks:
-      - saturday-network
+      - peerprep-network
 
-  nginx:
+  peerprep-nginx:
     image: nginx:latest
-    container_name: nginx
+    container_name: peerprep-nginx
     ports:
       - '80:80' # Expose Nginx on port 80
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf # Mount the Nginx configuration file
     networks:
-      - saturday-network
+      - peerprep-network
     depends_on:
-      - client # Wait until Client app container is up
-      - server # Wait until Server app container is up
+      - peerprep-client # Wait until Client app container is up
+      - peerprep-server # Wait until Server app container is up
 
 networks:
-  saturday-network:
+  peerprep-network:
     driver: bridge
 
 volumes:

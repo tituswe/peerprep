@@ -1,2 +1,2 @@
 build:
-	docker build -t client:saturday .
+	docker build -t client:peerprep .

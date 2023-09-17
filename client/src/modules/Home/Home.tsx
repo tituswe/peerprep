@@ -2,8 +2,9 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectCurrentUser } from '../../features/user/authSlice';
+import Navbar from '../../components/Navbar';
 
-const Module1 = () => {
+const Home = () => {
   const [message, setMessage] = useState('');
   const currentUser = useSelector(selectCurrentUser);
 
@@ -19,11 +20,16 @@ const Module1 = () => {
   }, []);
 
   return (
-    <main className="flex flex-col gap-4 w-full h-[100vh] justify-center items-center">
-      <a>Hello World {message}</a>
-      <a>{currentUser?.name} is logged in</a>
-    </main>
+    <>
+      <nav>
+        <Navbar />
+      </nav>
+      <main className="flex flex-col gap-4 w-full h-[100vh] justify-center items-center">
+        <a>Hello World {message}</a>
+        <a>{currentUser?.name} is logged in</a>
+      </main>
+    </>
   );
 };
 
-export default Module1;
+export default Home;
