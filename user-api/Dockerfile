@@ -7,6 +7,8 @@ WORKDIR /usr/src/app
 
 COPY . .
 
+ENV PYTHONPATH /usr/src/app/user-api:$PYTHONPATH
+
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
