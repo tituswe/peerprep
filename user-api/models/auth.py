@@ -2,23 +2,19 @@ from pydantic import BaseModel
 from typing import Union
 
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
+class LoginRequest(BaseModel):
+    email: str
+    password: str
 
 
-class TokenData(BaseModel):
-    email: Union[str, None] = None
+class RegisterRequest(LoginRequest):
+    name: str
 
 
 class User(BaseModel):
     email: str
     name: Union[str, None] = None
     disabled: Union[bool, None] = None
-
-
-class UserRequest(User):
-    password: str
 
 
 class UserInDB(User):

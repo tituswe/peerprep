@@ -1,19 +1,19 @@
 from datetime import datetime, timedelta
 import os
-from typing import Annotated, Union
-from fastapi import Depends, HTTPException, status
+from typing import Union
+from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from dotenv import load_dotenv
-from jose import JWTError, jwt
-from models.auth import TokenData, User, UserInDB, UserRequest
+from jose import jwt
+from models.auth import UserInDB
 
 
 load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = 100000
+ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
 fake_users_db = {
     "johndoe@example.com": {
@@ -29,6 +29,15 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
+def verify_token(token: str):
+    decoded_jwt = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    email = decoded_jwt.get("email")
+    hashed_password = decoded_jwt.get("hashed_password")
+    current_user = authenticate_user(
+        email=email, password=hashed_password, hashed=True)
+    return current_user
+
+
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -37,23 +46,46 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 
-def get_user(db, email: str):
-    if email in db:
-        user_dict = db[email]
+def get_user(email: str):
+    if email in fake_users_db:
+        user_dict = fake_users_db[email]
         return UserInDB(**user_dict)
 
 
-def authenticate_user(fake_db, email: str, password: str):
-    user = get_user(fake_db, email)
+def add_user(email: str, hashed_password: str, name: str):
+    fake_users_db[email] = {
+        "email": email,
+        "hashed_password": hashed_password,
+        "name": name,
+        "disabled": False
+    }
+
+
+def authenticate_user(email: str, password: str, hashed: bool = False):
+    user = get_user(email=email)
     if not user:
         return False
-    if not verify_password(password, user.hashed_password):
+    elif hashed and not password == user.hashed_password:
+        return False
+    elif not hashed and not verify_password(password, user.hashed_password):
         return False
     return user
 
 
-def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None):
-    to_encode = data.copy()
+def create_user(name: str, email: str, password: str):
+    existing_user = get_user(email=email)
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    hashed_password = pwd_context.hash(password)
+    add_user(email=email, hashed_password=hashed_password, name=name)
+
+    return authenticate_user(email=email, password=password)
+
+
+def create_access_token(email: str, hashed_password: str, expires_delta: Union[timedelta, None] = None):
+    to_encode = {}
+    to_encode.update({"email": email})
+    to_encode.update({"hashed_password": hashed_password})
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
@@ -61,57 +93,3 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
-
-
-def create_user(user: UserRequest):
-    existing_user = get_user(db=fake_users_db, email=user.email)
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
-
-    hashed_password = pwd_context.hash(user.password)
-    fake_users_db[user.email] = {
-        "email": user.email,
-        "hashed_password": hashed_password,
-        "name": user.name,
-        "disabled": False
-    }
-    current_user = User(email=user.email, name=user.name)
-
-    return current_user
-
-
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    print(email)
-    print(email)
-    print(email)
-    print(email)
-    print(email)
-    print(email)
-    print(email)
-    print(email)
-    print(email)
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
-            raise credentials_exception
-        token_data = TokenData(email=email)
-    except JWTError:
-        raise credentials_exception
-    user = get_user(fake_users_db, email=token_data.email)
-    if user is None:
-        raise credentials_exception
-    return user
-
-
-async def get_current_active_user(
-    current_user: Annotated[User, Depends(get_current_user)]
-):
-    if current_user.disabled:
-        raise HTTPException(status_code=400, detail="Inactive user")
-    return current_user
