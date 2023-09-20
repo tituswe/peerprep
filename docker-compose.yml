@@ -25,7 +25,8 @@ services:
       - ./user-api:/usr/src/app # Mount the FastAPI source code directory as a volume
     networks:
       - peerprep-network
-    #do depends on for sql
+    depends_on:
+      - peerprep-postgres
 
   peerprep-question-api:
     image: question-api:peerprep
@@ -43,6 +44,20 @@ services:
       - peerprep-network
     depends_on:
       - peerprep-mongo
+
+  peerprep-postgres:
+    image: postgres:latest
+    container_name: peerprep-postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=peerprep
+      - POSTGRES_PASSWORD=peerprep
+      - POSTGRES_DB=peerprep
+    networks:
+      - peerprep-network
 
   peerprep-mongo:
     image: mongo:latest
@@ -73,4 +88,6 @@ networks:
 
 volumes:
   mongo-data:
+    driver: local
+  postgres-data:
     driver: local

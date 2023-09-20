@@ -1,17 +1,30 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
-import { Fragment } from 'react';
+import { Fragment, useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import { logoutUser, selectCurrentUser } from '../../features/user/authSlice';
+import { store } from '../../store';
 import BellButton from './BellButton';
 import { classNames } from './Navbar';
 
+interface MenuItem {
+  name: string;
+  href: string;
+  onClick?: () => void;
+}
+
 const UserMenu = () => {
-  const currentUser = false;
+  const currentUser = useSelector(selectCurrentUser);
+
+  const logout = useCallback(() => {
+    store.dispatch(logoutUser());
+  }, []);
 
   const menu = currentUser
     ? [
         { name: 'Profile', href: '/profile' },
         { name: 'Settings', href: '/settings' },
-        { name: 'Sign out', href: '/' }
+        { name: 'Sign out', href: '/', onClick: logout }
       ]
     : [
         { name: 'Login', href: '/login' },
@@ -57,6 +70,7 @@ const UserMenu = () => {
                   {({ active }) => (
                     <a
                       href={item.href}
+                      onClick={item.onClick}
                       className={classNames(
                         active ? 'bg-gray-100' : '',
                         'block px-4 py-2 text-sm text-gray-700'

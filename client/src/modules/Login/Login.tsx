@@ -1,8 +1,33 @@
+import { ArrowUturnLeftIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo-dark.png';
+import { loginUser } from '../../features/user/authSlice';
+import { store } from '../../store';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const credentials = { email, password };
+    store.dispatch(loginUser(credentials)).then(() => {
+      navigate('/');
+    });
+  };
+
   return (
     <>
+      <button onClick={() => navigate('/')} className="absolute top-8 left-8">
+        <div className="flex flex-row gap-2 border-[2px] hover:border-indigo-500 hover:scale-105 transition rounded-lg px-4 py-2">
+          <ArrowUturnLeftIcon className="w-5 h-5" />
+          <a className="text-sm">To Dashboard</a>
+        </div>
+      </button>
+
       <div className="flex min-h-[100vh] flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img className="mx-auto h-10 w-auto" src={logo} alt="PeerPrep" />
@@ -12,7 +37,7 @@ const Login = () => {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor="email"
@@ -26,6 +51,8 @@ const Login = () => {
                   name="email"
                   type="email"
                   autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -55,6 +82,8 @@ const Login = () => {
                   name="password"
                   type="password"
                   autoComplete="current-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />

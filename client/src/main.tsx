@@ -1,9 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import {
+  Navigate,
+  RouterProvider,
+  createBrowserRouter
+} from 'react-router-dom';
 import Preloader from './Preloader';
-import Root from './Root';
 import './index.css';
 import Dashboard from './modules/Dashboard/Dashboard';
 import Login from './modules/Login/Login';
@@ -15,7 +18,7 @@ import { store } from './store';
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Root />
+    element: <Navigate replace to="/dashboard" />
   },
   {
     path: '/dashboard',

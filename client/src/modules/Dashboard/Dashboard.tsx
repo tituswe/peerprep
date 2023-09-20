@@ -1,13 +1,17 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { selectCurrentUser } from '../../features/user/authSlice';
+import {
+  checkAuthStatus,
+  selectCurrentUser
+} from '../../features/user/authSlice';
 import PageWrapper from '../../layouts/PageWrapper';
+import { store } from '../../store';
 
 const Dashboard = () => {
+  const currentUser = useSelector(selectCurrentUser);
   const [questionApi, setQuestionApi] = useState('');
   const [userApi, setUserApi] = useState('');
-  const currentUser = useSelector(selectCurrentUser);
 
   useEffect(() => {
     axios
@@ -27,13 +31,15 @@ const Dashboard = () => {
       .catch((error) => {
         console.error('There was an error!', error);
       });
+
+    store.dispatch(checkAuthStatus());
   }, []);
 
   return (
     <PageWrapper>
       <a>Hello World {userApi}</a>
       <a>Hello World {questionApi}</a>
-      <a>{currentUser?.name} is logged in</a>
+      <a>{currentUser && currentUser.name} is logged in!</a>
     </PageWrapper>
   );
 };
