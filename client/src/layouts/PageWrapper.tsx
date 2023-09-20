@@ -6,14 +6,12 @@ interface PageWrapperProps {
 
 const PageWrapper: React.FC<PageWrapperProps> = ({ children }) => {
   return (
-    <>
-      <nav className="absolute top-0 w-full">
-        <Navbar />
-      </nav>
-      <main className="flex flex-col gap-4 w-full h-[100vh] justify-center items-center">
+    <div className="h-screen flex flex-col">
+      <Navbar />
+      <main className="flex flex-col gap-4 w-full overflow-hidden flex-grow bg-gray-100">
         {children}
       </main>
-    </>
+    </div>
   );
 };
 

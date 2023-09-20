@@ -5,7 +5,6 @@ import {
   checkAuthStatus,
   selectCurrentUser
 } from '../../features/user/authSlice';
-import PageWrapper from '../../layouts/PageWrapper';
 import { store } from '../../store';
 
 const Dashboard = () => {
@@ -36,11 +35,11 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <PageWrapper>
+    <>
       <a>Hello World {userApi}</a>
       <a>Hello World {questionApi}</a>
       <a>{currentUser && currentUser.name} is logged in!</a>
-    </PageWrapper>
+    </>
   );
 };
 

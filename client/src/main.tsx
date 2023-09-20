@@ -8,10 +8,11 @@ import {
 } from 'react-router-dom';
 import Preloader from './Preloader';
 import './index.css';
+import PageWrapper from './layouts/PageWrapper';
 import Dashboard from './modules/Dashboard/Dashboard';
 import Login from './modules/Login/Login';
+import Question from './modules/Questions/Question';
 import Register from './modules/Register/Register';
-import Module2 from './modules/module2/Module2';
 import Module3 from './modules/module3/Module3';
 import { store } from './store';
 
@@ -22,7 +23,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/dashboard',
-    element: <Dashboard />
+    element: (
+      <PageWrapper>
+        <Dashboard />
+      </PageWrapper>
+    )
   },
   {
     path: '/login',
@@ -33,8 +38,12 @@ const router = createBrowserRouter([
     element: <Register />
   },
   {
-    path: '/module2',
-    element: <Module2 />
+    path: '/question/add',
+    element: (
+      <PageWrapper>
+        <Question />
+      </PageWrapper>
+    )
   },
   {
     path: '/module3',
