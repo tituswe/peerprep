@@ -44,8 +44,12 @@ git clone git@github.com:tituswe/saturday-boilerplate.git
 cd my-app
 cd client
 npm install
-cd ..
+cd ../question-api
 npm install
+cd ../user-api
+conda create --name user-api python=3.9
+conda activate
+pip install -r requirements.txt
 ```
 
 ## Start the development server

@@ -6,44 +6,101 @@ import { StatusType, User } from '../../types';
 interface AuthState {
   currentUser?: User;
   status: StatusType;
-  error?: string;
 }
 
 const initialState: AuthState = {
   currentUser: undefined,
-  status: 'DEFAULT',
-  error: undefined
+  status: 'DEFAULT'
 };
 
-export const fetchCurrentUser = createAsyncThunk(
-  '/users/fetchCurrentUser',
+axios.defaults.withCredentials = true;
+
+export const checkAuthStatus = createAsyncThunk(
+  '/authSlice/checkAuthStatus',
   async () => {
-    const response = await axios.get('/api/users/currentUser');
+    const response = await axios.get('/users/auth/token');
     return response.data;
   }
 );
 
-const authSlice = createSlice({
+export const registerUser = createAsyncThunk(
+  '/authSlice/registerUser',
+  async (credentials: { name: string; email: string; password: string }) => {
+    const response = await axios.post('/users/auth/register', credentials);
+    return response.data;
+  }
+);
+
+export const loginUser = createAsyncThunk(
+  '/authSlice/loginUser',
+  async (credentials: { email: string; password: string }) => {
+    const response = await axios.post('/users/auth/login', credentials);
+    return response.data;
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  '/authSlice/logoutUser',
+  async () => {
+    const response = await axios.post('/users/auth/logout');
+    return response.data;
+  }
+);
+
+export const authSlice = createSlice({
   name: 'authentication',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCurrentUser.pending, (state, action) => {
+      .addCase(checkAuthStatus.pending, (state) => {
         state.status = 'LOADING';
       })
-      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+      .addCase(checkAuthStatus.fulfilled, (state, action) => {
         state.status = 'SUCCESS';
         state.currentUser = action.payload;
       })
-      .addCase(fetchCurrentUser.rejected, (state, action) => {
+      .addCase(checkAuthStatus.rejected, (state) => {
         state.status = 'ERROR';
-        state.error = action.error.message;
+      })
+      .addCase(registerUser.pending, (state) => {
+        state.status = 'LOADING';
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.status = 'SUCCESS';
+        state.currentUser = action.payload;
+      })
+      .addCase(registerUser.rejected, (state) => {
+        state.status = 'ERROR';
+      })
+      .addCase(loginUser.pending, (state) => {
+        state.status = 'LOADING';
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.status = 'SUCCESS';
+        state.currentUser = action.payload;
+      })
+      .addCase(loginUser.rejected, (state) => {
+        state.status = 'ERROR';
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.status = 'LOADING';
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.status = 'SUCCESS';
+        state.currentUser = undefined;
+      })
+      .addCase(logoutUser.rejected, (state) => {
+        state.status = 'ERROR';
       });
   }
 });
 
 export const selectCurrentUser = (state: RootState) =>
   state.authentication.currentUser;
+export const selectIsAuthenticated = (state: RootState) =>
+  state.authentication.currentUser !== undefined;
+export const selectAuthStatus = (state: RootState) =>
+  state.authentication.status;
 
 export default authSlice.reducer;
