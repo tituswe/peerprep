@@ -12,6 +12,7 @@ import PageWrapper from './layouts/PageWrapper';
 import Dashboard from './modules/Dashboard/Dashboard';
 import Login from './modules/Login/Login';
 import Question from './modules/Questions/Question';
+import QuestionCreator from './modules/Questions/QuestionCreator';
 import Register from './modules/Register/Register';
 import Module3 from './modules/module3/Module3';
 import { store } from './store';
@@ -38,10 +39,18 @@ const router = createBrowserRouter([
     element: <Register />
   },
   {
-    path: '/question/add',
+    path: '/question',
     element: (
       <PageWrapper>
         <Question />
+      </PageWrapper>
+    )
+  },
+  {
+    path: '/question/create',
+    element: (
+      <PageWrapper>
+        <QuestionCreator />
       </PageWrapper>
     )
   },

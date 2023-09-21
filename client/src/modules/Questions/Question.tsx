@@ -1,9 +1,9 @@
-import QuestionConstraints from '../../components/Questions/QuestionConstraints';
-import QuestionDescription from '../../components/Questions/QuestionDescription';
-import QuestionExamples from '../../components/Questions/QuestionExamples';
-import QuestionFooter from '../../components/Questions/QuestionFooter';
-import QuestionHeader from '../../components/Questions/QuestionHeader';
-import QuestionTags from '../../components/Questions/QuestionTags';
+import QuestionConstraints from '../../components/Questions/Read/QuestionConstraints';
+import QuestionDescription from '../../components/Questions/Read/QuestionDescription';
+import QuestionExamples from '../../components/Questions/Read/QuestionExamples';
+import QuestionFooter from '../../components/Questions/Read/QuestionFooter';
+import QuestionHeader from '../../components/Questions/Read/QuestionHeader';
+import QuestionTags from '../../components/Questions/Read/QuestionTags';
 
 const Question = () => {
   return (
