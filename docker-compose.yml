@@ -55,7 +55,7 @@ services:
     environment:
       - POSTGRES_USER=peerprep
       - POSTGRES_PASSWORD=peerprep
-      - POSTGRES_DB=peerprep
+      - POSTGRES_DB=database
     networks:
       - peerprep-network
 
