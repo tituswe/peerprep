@@ -1,13 +1,8 @@
-import { CheckIcon } from '@heroicons/react/24/solid';
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import SectionHeader from './SectionHeader';
 
 const QuestionDescription = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const onAdd = useCallback(() => {
-    alert('added');
-  }, []);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -30,14 +25,8 @@ const QuestionDescription = () => {
               textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
             }
           }}
-          className="resize-none p-2 border rounded-xl overflow-hidden bg-gray-100 shadow-inner"
+          className="resize-none min-h-[80px] p-2 border rounded-xl overflow-hidden bg-gray-100 shadow-inner"
         />
-
-        <button onClick={onAdd} className="flex justify-end">
-          <div className="p-1 bg-gray-100 rounded-full shadow-lg hover:scale-105">
-            <CheckIcon className="w-6 h-6 text-green-500" />
-          </div>
-        </button>
       </div>
     </>
   );

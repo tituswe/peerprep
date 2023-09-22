@@ -1,29 +1,42 @@
+import { MinusIcon, PlusIcon } from '@heroicons/react/24/solid';
+import { useCallback, useState } from 'react';
 import QuestionExample from './QuestionExample';
 
 const QuestionExamples = () => {
-  const questions = [
-    {
-      input: {
-        nums: '[2, 7, 11, 15]',
-        target: '9'
-      },
-      output: '[0, 1]',
-      explanation: 'Because nums[0] + nums[1] == 9, we return [0, 1].'
-    }
-  ];
+  const [examples, setExamples] = useState<number[]>([]);
+
+  const onAdd = useCallback(() => {
+    setExamples([...examples, examples.length]);
+  }, [examples]);
+
+  const onDelete = useCallback(
+    (index: number) => {
+      console.log(index);
+      setExamples(examples.filter((_, i) => i !== index));
+    },
+    [examples]
+  );
 
   return (
     <>
-      {questions.map((question, index) => (
-        <QuestionExample
-          isAdding
-          key={index}
-          index={index + 1}
-          input={question.input}
-          output={question.output}
-          explanation={question.explanation}
-        />
+      {examples.map((_, index) => (
+        <div key={index} className="relative">
+          <QuestionExample />
+          <button
+            onClick={() => onDelete(index)}
+            className="absolute -top-2 -right-2 p-1 rounded-full shadow-md bg-gray-100"
+          >
+            <MinusIcon className="w-4 h-4 text-rose-500" />
+          </button>
+        </div>
       ))}
+
+      <button
+        onClick={onAdd}
+        className="flex justify-center bg-gray-100 p-8 rounded-2xl shadow-lg transition hover:bg-gray-200 hover:opacity-75"
+      >
+        <PlusIcon className="w-6 h-6 text-sky-500" />
+      </button>
     </>
   );
 };

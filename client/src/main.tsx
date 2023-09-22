@@ -9,12 +9,11 @@ import {
 import Preloader from './Preloader';
 import './index.css';
 import PageWrapper from './layouts/PageWrapper';
+import Login from './modules/Authentication/Login';
+import Register from './modules/Authentication/Register';
 import Dashboard from './modules/Dashboard/Dashboard';
-import Login from './modules/Login/Login';
 import Question from './modules/Questions/Question';
 import QuestionCreator from './modules/Questions/QuestionCreator';
-import Register from './modules/Register/Register';
-import Module3 from './modules/module3/Module3';
 import { store } from './store';
 
 const router = createBrowserRouter([
@@ -53,10 +52,6 @@ const router = createBrowserRouter([
         <QuestionCreator />
       </PageWrapper>
     )
-  },
-  {
-    path: '/module3',
-    element: <Module3 />
   }
 ]);
 
