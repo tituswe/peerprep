@@ -1,7 +1,23 @@
 import { LifebuoyIcon, StarIcon } from '@heroicons/react/24/outline';
 import { HeartIcon } from '@heroicons/react/24/solid';
+import { useCallback } from 'react';
+import { useSelector } from 'react-redux';
+import {
+  selectTitle,
+  updateTitle
+} from '../../../features/questions/creatorSlice';
+import { store } from '../../../store';
 
 const QuestionHeader = () => {
+  const title = useSelector(selectTitle);
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      store.dispatch(updateTitle(e.target.value));
+    },
+    [store]
+  );
+
   return (
     <div className="flex flex-col gap-4 bg-gray-200 p-8 rounded-2xl shadow-lg">
       <h1 className="flex flex-row justify-between items-center text-2xl text-neutral-800 font-semibold">
@@ -9,6 +25,8 @@ const QuestionHeader = () => {
           className="w-full mr-4 p-2 rounded-xl bg-transparent shadow-inner"
           type="text"
           placeholder="Title"
+          value={title}
+          onChange={handleChange}
         />
         <div className="flex gap-2"></div>
         <button className="flex">

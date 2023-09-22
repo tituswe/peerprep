@@ -1,30 +1,36 @@
 import { CheckIcon, MinusIcon, PlusIcon } from '@heroicons/react/24/solid';
 import { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
+import {
+  selectTags,
+  updateTags
+} from '../../../features/questions/creatorSlice';
+import { store } from '../../../store';
 import QuestionTag from './QuestionTag';
 
 const QuestionTags = () => {
+  const tags = useSelector(selectTags);
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [tag, setTag] = useState<string>('');
-  const [tags, setTags] = useState<string[]>([]);
-
-  const onAdd = useCallback(() => {
-    setTags([tag, ...tags]);
-    setIsAdding(false);
-    setTag('');
-  }, [tag]);
-
-  const onDelete = useCallback(
-    (tag: string) => {
-      setTags(tags.filter((t) => t !== tag));
-      setTag('');
-    },
-    [tags]
-  );
 
   const onToggle = useCallback(() => {
     setIsAdding(!isAdding);
     setTag('');
   }, [isAdding]);
+
+  const onAdd = useCallback(() => {
+    store.dispatch(updateTags([...tags, tag]));
+    setIsAdding(false);
+    setTag('');
+  }, [store, tag]);
+
+  const onDelete = useCallback(
+    (tag: string) => {
+      store.dispatch(updateTags(tags.filter((t) => t !== tag)));
+      setTag('');
+    },
+    [tags]
+  );
 
   return (
     <div className="flex flex-row flex-wrap gap-4 px-4 py-2 items-center">

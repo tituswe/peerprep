@@ -4,4 +4,28 @@ export type User = {
   email: string;
 };
 
+export type Question = {
+  id: string;
+  title: string;
+  difficulty: QuestionDifficulty;
+  tags: QuestionTag[];
+  description: QuestionDescription;
+  examples: QuestionExample[];
+  constraints: QuestionConstraint[];
+};
+
+export type QuestionDifficulty = 'EASY' | 'MEDIUM' | 'HARD';
+
+export type QuestionTag = string;
+
+export type QuestionDescription = string;
+
+export type QuestionExample = {
+  in: string;
+  out: string;
+  explanation: string;
+};
+
+export type QuestionConstraint = string;
+
 export type StatusType = 'DEFAULT' | 'LOADING' | 'SUCCESS' | 'ERROR';
