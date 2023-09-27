@@ -1,4 +1,5 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 import { RootState } from '../../store';
 import {
   Question,
@@ -6,47 +7,66 @@ import {
   QuestionDescription,
   QuestionDifficulty,
   QuestionExample,
-  QuestionTag
+  QuestionTag,
+  StatusType
 } from '../../types';
 
-const initialState: Question = {
-  id: '',
-  title: '',
-  difficulty: 'EASY',
-  tags: [],
-  description: '',
-  examples: [],
-  constraints: []
+interface CreatorState {
+  question: Question;
+  status: StatusType;
+}
+
+const initialState: CreatorState = {
+  question: {
+    title: '',
+    difficulty: 'EASY',
+    tags: [],
+    description: '',
+    examples: [],
+    constraints: []
+  },
+  status: 'DEFAULT'
 };
+
+axios.defaults.withCredentials = true;
+
+export const createQuestion = createAsyncThunk(
+  '/creatorSlice/createQuestion',
+  async (question: Question) => {
+    console.log(question);
+    const response = await axios.post('/questions/questions/', question);
+    return response.data;
+  }
+);
 
 export const creatorSlice = createSlice({
   name: 'creator',
   initialState,
   reducers: {
     updateTitle: (state, action: PayloadAction<string>) => {
-      state.title = action.payload;
+      state.question.title = action.payload;
     },
     updateDifficulty: (state, action: PayloadAction<QuestionDifficulty>) => {
-      state.difficulty = action.payload;
+      state.question.difficulty = action.payload;
     },
     updateTags: (state, action: PayloadAction<QuestionTag[]>) => {
-      state.tags = action.payload;
+      state.question.tags = action.payload;
     },
     updateDescription: (state, action: PayloadAction<QuestionDescription>) => {
-      state.description = action.payload;
+      state.question.description = action.payload;
     },
     addExample: (state, action: PayloadAction<QuestionExample>) => {
-      state.examples.push(action.payload);
+      state.question.examples.push(action.payload);
     },
     updateExample: (
       state,
       action: PayloadAction<{ example: QuestionExample; index: number }>
     ) => {
-      state.examples[action.payload.index] = action.payload.example;
+      state.question.examples[action.payload.index] = action.payload.example;
     },
     deleteExample: (state, action: PayloadAction<QuestionExample>) => {
-      const examples = [...state.examples];
-      state.examples = examples.filter(
+      const examples = [...state.question.examples];
+      state.question.examples = examples.filter(
         (e) =>
           !(
             e.in === action.payload.in &&
@@ -56,21 +76,37 @@ export const creatorSlice = createSlice({
       );
     },
     addConstraint: (state, action: PayloadAction<QuestionConstraint>) => {
-      state.constraints.push(action.payload);
+      state.question.constraints.push(action.payload);
     },
     updateConstraint: (
       state,
       action: PayloadAction<{ constraint: QuestionConstraint; index: number }>
     ) => {
-      state.constraints[action.payload.index] = action.payload.constraint;
+      state.question.constraints[action.payload.index] =
+        action.payload.constraint;
     },
     deleteConstraint: (state, action: PayloadAction<QuestionConstraint>) => {
-      const constraints = [...state.constraints];
-      state.constraints = constraints.filter((c) => c !== action.payload);
+      const constraints = [...state.question.constraints];
+      state.question.constraints = constraints.filter(
+        (c) => c !== action.payload
+      );
     },
     reset: (state) => {
       state = initialState;
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(createQuestion.pending, (state) => {
+        state.status = 'LOADING';
+      })
+      .addCase(createQuestion.fulfilled, (state) => {
+        state.status = 'SUCCESS';
+        state.question = initialState.question;
+      })
+      .addCase(createQuestion.rejected, (state) => {
+        state.status = 'ERROR';
+      });
   }
 });
 
@@ -88,13 +124,18 @@ export const {
   reset
 } = creatorSlice.actions;
 
-export const selectTitle = (state: RootState) => state.creator.title;
-export const selectDifficulty = (state: RootState) => state.creator.difficulty;
-export const selectTags = (state: RootState) => state.creator.tags;
+export const selectTitle = (state: RootState) => state.creator.question.title;
+export const selectDifficulty = (state: RootState) =>
+  state.creator.question.difficulty;
+export const selectTags = (state: RootState) => state.creator.question.tags;
 export const selectDescription = (state: RootState) =>
-  state.creator.description;
-export const selectExamples = (state: RootState) => state.creator.examples;
+  state.creator.question.description;
+export const selectExamples = (state: RootState) =>
+  state.creator.question.examples;
 export const selectConstraints = (state: RootState) =>
-  state.creator.constraints;
+  state.creator.question.constraints;
+export const selectCreatorQuestion = (state: RootState) =>
+  state.creator.question;
+export const selectCreatorStatus = (state: RootState) => state.creator.status;
 
 export default creatorSlice.reducer;

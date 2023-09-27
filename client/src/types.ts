@@ -5,7 +5,7 @@ export type User = {
 };
 
 export type Question = {
-  id: string;
+  id?: string;
   title: string;
   difficulty: QuestionDifficulty;
   tags: QuestionTag[];

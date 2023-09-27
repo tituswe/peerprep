@@ -1,5 +1,5 @@
 import express, { Express, Request, Response } from 'express';
-import userRoutes from './routes/users';
+import questionRoutes from './routes/questions';
 
 require('dotenv').config();
 require('./mongodb/db');
@@ -11,7 +11,8 @@ app.get('/', (req: Request, res: Response) => {
   res.send('from Question API!');
 });
 
-app.use('/users', userRoutes);
+app.use(express.json());
+app.use('/questions', questionRoutes);
 
 app.listen(port, () => {
   console.log(`⚡️[server]: Server is alive at http://localhost:${port}`);
