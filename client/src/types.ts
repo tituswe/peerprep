@@ -12,6 +12,8 @@ export type Question = {
   description: QuestionDescription;
   examples: QuestionExample[];
   constraints: QuestionConstraint[];
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type QuestionDifficulty = 'EASY' | 'MEDIUM' | 'HARD';
