@@ -19,7 +19,7 @@ const QuestionTags = () => {
   }, [isAdding]);
 
   const onAdd = useCallback(() => {
-    store.dispatch(updateTags([...tags, tag]));
+    store.dispatch(updateTags([tag, ...tags]));
     setIsAdding(false);
     setTag('');
   }, [store, tag]);
