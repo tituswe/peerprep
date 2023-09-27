@@ -2,7 +2,7 @@ import SectionHeader from './SectionHeader';
 
 interface QuestionExampleProps {
   index: number;
-  input: Record<string, string>;
+  input: string;
   output: string;
   explanation?: string;
 }
@@ -20,13 +20,7 @@ const QuestionExample: React.FC<QuestionExampleProps> = ({
       <div className="flex flex-col pt-4 px-4 gap-2">
         <div className="flex flex-row gap-4">
           <a className="w-[100px]">In: </a>
-          {Object.entries(input).map(([key, value], id) => (
-            <div key={id} className="flex gap-4">
-              <p>
-                {key} = {value}
-              </p>
-            </div>
-          ))}
+          <p>{input}</p>
         </div>
 
         <div className="flex flex-row gap-4">

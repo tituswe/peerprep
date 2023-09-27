@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const questionSchema = new Schema({
-  title: { type: String, required: true },
+  title: { type: String, required: true, unique: true },
   difficulty: { type: String, required: true },
   tags: { type: [String], required: true },
   description: { type: String, required: true },
